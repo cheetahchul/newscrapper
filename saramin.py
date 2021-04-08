@@ -5,7 +5,7 @@ URL_1 = f"https://www.saramin.co.kr/zf_user/search/recruit?search_area=main&sear
 URL_2 = f"&recruitSort=relation&recruitPageCount=500"
 
 
-def extract_pages():
+def get_last_page():
     result = requests.get(URL_1 + URL_2)
     soup = BeautifulSoup(result.text, "html.parser")
     pagination = soup.find("div", {"class": "pagination"})
@@ -19,6 +19,12 @@ def extract_pages():
     return last_page
 
 
+def extract_job(html):
+    title = html.find("div", {"class": "area_corp"}
+                      ).find("strong").find("span")
+    print(title)
+
+
 def extract_jobs(last_page):
     jobs = []
     for page in range(last_page):
@@ -26,4 +32,12 @@ def extract_jobs(last_page):
         soup = BeautifulSoup(result.text, "html.parser")
         results = soup.find_all("h2", {"class": "job_tit"})
         for result in results:
-            print(result)
+            job = extract_job(result)
+            jobs.append(job)
+    return jobs
+
+
+def get_jobs():
+    last_page = get_last_page()
+    jobs = extract_jobs(last_page)
+    return jobs
