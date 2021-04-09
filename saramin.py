@@ -20,20 +20,19 @@ def get_last_page():
 
 
 def extract_job(html):
-    title = html.find("div", {"class": "area_corp"}
-                      ).find("strong").find("span")
-    print(title)
+    print(html)
 
 
 def extract_jobs(last_page):
     jobs = []
     for page in range(last_page):
+        print(f"Scrapping page {page}")
         result = requests.get(f"{URL_1}{page+1}{URL_2}")
         soup = BeautifulSoup(result.text, "html.parser")
         results = soup.find_all("h2", {"class": "job_tit"})
-        for result in results:
-            job = extract_job(result)
-            jobs.append(job)
+    for result in results:
+        job = extract_job(result)
+        jobs.append(job)
     return jobs
 
 
